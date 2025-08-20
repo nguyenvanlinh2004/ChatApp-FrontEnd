@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
     const conversations = useSelector(
         (state: RootState) => state.conversations.conversations
     );
-    console.log("asdasdasda",conversations);
+
 
     useEffect(() => {
         const tk = localStorage.getItem("token");
@@ -42,7 +42,7 @@ const Sidebar: React.FC = () => {
         socket.auth = { token: tk };
         socket.connect();
 
-        socket.on("connect", () => console.log("Connected:", socket.id));
+        socket.on("connect", () => console.log("Connected socket:", socket.id));
         socket.on("disconnect", () => console.log("Disconnected"));
 
         (async () => {
@@ -50,9 +50,6 @@ const Sidebar: React.FC = () => {
                 const convRes = await conversationApi.myConversations();
                 dispatch(setConversations(convRes));
                 dispatch(setCurrentConversation(convRes[0] || []));
-                console.log("convensation",convRes);
-                const userRes = await userApi.all();
-                console.log("userRes", userRes);
                 // const filtered = userRes.data.filter((u: any) => u._id !== id);
                 // dispatch(setUsers(filtered));
                 

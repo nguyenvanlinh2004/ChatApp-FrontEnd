@@ -52,7 +52,7 @@ export const createGroupConversation = createAsyncThunk(
 );
 
 export const getOrCreateOneToOne = createAsyncThunk(
-  "conversations/getOrCreateOneToOne",
+  "conversations/one-to-one",
   async (partnerId: string, { rejectWithValue }) => {
     try {
       return await conversationApi.getOrCreateOneToOne(partnerId);

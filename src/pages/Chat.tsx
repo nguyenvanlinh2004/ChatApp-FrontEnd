@@ -130,7 +130,7 @@ const Chat: React.FC = () => {
           { Authorization: tk } }
       );
       const conv = res.data;
-
+      
       setConversations((prev) =>
         prev.find((c) => c._id === conv._id) ? prev : [conv, ...prev]
       );
