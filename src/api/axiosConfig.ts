@@ -12,7 +12,7 @@ axiosClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
-      config.headers.Authorization = token; // có thể dùng Bearer token nếu backend cần
+      config.headers.Authorization = token;
     }
     return config;
   },
@@ -27,7 +27,7 @@ axiosClient.interceptors.response.use(
       // Token hết hạn hoặc không hợp lệ
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
-      window.location.href = "/login"; // redirect về login
+      window.location.href = "/"; // redirect về login
     }
     return Promise.reject(error);
   }

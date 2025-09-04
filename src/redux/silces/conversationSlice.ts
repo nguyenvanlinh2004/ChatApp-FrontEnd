@@ -1,14 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type {PayloadAction} from "@reduxjs/toolkit"
+import type { PayloadAction } from "@reduxjs/toolkit";
 import conversationApi from "../../api/conversationApi";
 
+export interface User {
+  _id: string;
+  username: string;
+  avatar?: string;
+  fullName?: string;
+}
+export interface LastMessage {
+  _id: string;
+  text?: string;
+  sender?: string;
+  createdAt?: string;
+}
 export interface Conversation {
   _id: string;
   name?: string;
   isGroup: boolean;
   members: string[];
-  lastMessage?: string;
-  
+  lastMessage?: LastMessage;
 }
 
 interface ConversationState {
@@ -32,7 +43,9 @@ export const fetchMyConversations = createAsyncThunk(
     try {
       return await conversationApi.myConversations();
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || "Lỗi tải hội thoại");
+      return rejectWithValue(
+        err.response?.data?.message || "Lỗi tải hội thoại"
+      );
     }
   }
 );
@@ -57,7 +70,9 @@ export const getOrCreateOneToOne = createAsyncThunk(
     try {
       return await conversationApi.getOrCreateOneToOne(partnerId);
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || "Lỗi tạo hội thoại 1-1");
+      return rejectWithValue(
+        err.response?.data?.message || "Lỗi tạo hội thoại 1-1"
+      );
     }
   }
 );
@@ -67,10 +82,13 @@ const conversationSlice = createSlice({
   name: "conversations",
   initialState,
   reducers: {
-     setConversations: (state, action: PayloadAction<Conversation[]>) => {
+    setConversations: (state, action: PayloadAction<Conversation[]>) => {
       state.conversations = action.payload;
     },
-    setCurrentConversation: (state, action: PayloadAction<Conversation | null>) => {
+    setCurrentConversation: (
+      state,
+      action: PayloadAction<Conversation | null>
+    ) => {
       state.currentConversation = action.payload;
     },
   },
@@ -82,8 +100,9 @@ const conversationSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchMyConversations.fulfilled, (state, action) => {
+        console.log("payload conversations:", action.payload); 
         state.loading = false;
-        state.conversations = action.payload;
+        state.conversations = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(fetchMyConversations.rejected, (state, action) => {
         state.loading = false;
@@ -97,7 +116,9 @@ const conversationSlice = createSlice({
 
       // getOrCreateOneToOne
       .addCase(getOrCreateOneToOne.fulfilled, (state, action) => {
-        const exists = state.conversations.find((c) => c._id === action.payload._id);
+        const exists = state.conversations.find(
+          (c) => c._id === action.payload._id
+        );
         if (!exists) {
           state.conversations.push(action.payload);
         }
@@ -106,5 +127,6 @@ const conversationSlice = createSlice({
   },
 });
 
-export const { setCurrentConversation, setConversations } = conversationSlice.actions;
+export const { setCurrentConversation, setConversations } =
+  conversationSlice.actions;
 export default conversationSlice.reducer;
