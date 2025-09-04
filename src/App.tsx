@@ -1,18 +1,21 @@
+// src/App.tsx
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Chat1 from "./pages/Chat1";
+import ChatLayout from "./layouts/ChatLayout";
+
 const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        {/* Auth routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/chat1" element={<Chat1 />} />
+
+        {/* Chat layout (mọi route khác) */}
+        <Route path="/chat" element={<ChatLayout />} />
       </Routes>
-      {/* <Sidebar/> */}
     </BrowserRouter>
   );
 };

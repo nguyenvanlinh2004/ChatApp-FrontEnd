@@ -4,7 +4,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 interface AuthState {
   userId: string | null;
   token: string | null;
-  users: any[]; 
+  users: any|null; 
 }
 
 const initialState: AuthState = {
@@ -23,7 +23,7 @@ const authSlice = createSlice({
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
     },
-    setUsers: (state, action: PayloadAction<any[]>) => {
+    setUsers: (state, action: PayloadAction<any>) => {
       state.users = action.payload;
     },
     logout: (state) => {
