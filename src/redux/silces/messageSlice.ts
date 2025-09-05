@@ -33,11 +33,6 @@ const initialState: MessageState = {
   nextCursor: null,
 };
 
-//
-// ------------------- ASYNC ACTIONS -------------------
-//
-
-// Lấy messages theo conversationId
 export const fetchMessages = createAsyncThunk(
   "messages/fetchMessages",
   async (conversationId: string, { rejectWithValue }) => {
@@ -68,7 +63,7 @@ export const sendMessage = createAsyncThunk(
         text,
         imageUrl,
       });
-      return res; // 1 object message
+      return res;
     } catch (err: any) {
       return rejectWithValue(err.response?.data || err.message);
     }

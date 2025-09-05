@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import ChatList from "../components/ChatList1";
 import ChatWindow from "../components/ChatWindow1";
-import ConversationInfo from "../components/ConversationInfo1";
 import Sidebar from "../components/Sidebar1";
 import socket from "../soket";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,8 +8,14 @@ import {
   addMessageRealtime,
   updateMessageRealtime,
 } from "../redux/silces/messageSlice";
+import type { RootState } from "../redux/store";
+import Welcome from "../components/Welcome";
+import { updateConversationLastMessage } from "../redux/silces/conversationSlice";
 
 export default function ChatLayout() {
+  const currentConversation = useSelector(
+    (state: RootState) => state.conversations.currentConversation
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,6 +23,18 @@ export default function ChatLayout() {
 
     const handleNewMessage = (msg: any) => {
       dispatch(addMessageRealtime(msg));
+
+      dispatch(
+        updateConversationLastMessage({
+          conversationId: msg.conversationId,
+          lastMessage: {
+            _id: msg._id,
+            text: msg.text,
+            sender: msg.sender,
+            createdAt: msg.createdAt,
+          },
+        })
+      );
     };
 
     const handleReadMessage = (msg: any) => {
@@ -45,12 +62,8 @@ export default function ChatLayout() {
           <ChatList />
         </div>
 
-        <div className="flex-1/20 flex flex-col overflow-y-auto border-r">
-          <ChatWindow />
-        </div>
-
-        <div className="">
-          <ConversationInfo />
+        <div className="flex-1/2 flex flex-col overflow-y-auto border-r">
+          {currentConversation ? <ChatWindow /> : <Welcome />}
         </div>
       </div>
     </div>

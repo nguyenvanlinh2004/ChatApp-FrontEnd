@@ -1,3 +1,4 @@
+import { formatTime } from "../utils/timeFormat";
 type Props = {
   name: string;
   lastMessage: string;
@@ -12,7 +13,7 @@ export default function ChatListItem({ name, lastMessage, time, active }: Props)
         <p className="font-semibold">{name}</p>
         <p className="text-sm text-gray-500">{lastMessage}</p>
       </div>
-      <span className="text-xs text-gray-400">{time}</span>
+      <span className="text-xs text-gray-400">{formatTime(time)}</span>
     </div>
   );
 }
