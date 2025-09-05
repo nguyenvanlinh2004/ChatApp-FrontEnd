@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Mic, Send } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { sendMessage, addMessageRealtime } from "../redux/silces/messageSlice";
+import {  useAppSelector } from "../redux/hooks";
+// import { sendMessage, addMessageRealtime } from "../redux/silces/messageSlice";
 import socket from "../soket";
 
 export default function MessageInput() {
   const [text, setText] = useState("");
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const currentConversation = useAppSelector(
     (s) => s.conversations.currentConversation
   );
@@ -15,27 +15,25 @@ export default function MessageInput() {
   const handleSend = () => {
     if (!text.trim() || !currentConversation?._id) return;
 
-    // 1️⃣ Thêm ngay vào Redux để hiển thị sender
-    const tempMsg = {
-      _id: Math.random().toString(36), // tạm id
-      conversationId: currentConversation._id,
-      sender: userId!,
-      text,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      seenBy: [userId!],
-    };
-    dispatch(addMessageRealtime(tempMsg));
 
-    // 2️⃣ Gửi lên API + Redux
-    dispatch(
-      sendMessage({
-        conversationId: currentConversation._id,
-        text,
-      })
-    );
+    // const tempMsg = {
+    //   _id: Math.random().toString(36), // tạm id
+    //   conversationId: currentConversation._id,
+    //   sender: userId!,
+    //   text,
+    //   createdAt: new Date().toISOString(),
+    //   updatedAt: new Date().toISOString(),
+    //   seenBy: [userId!],
+    // };
+    // dispatch(addMessageRealtime(tempMsg));
+    // dispatch(
+    //   sendMessage({
+    //     conversationId: currentConversation._id,
+    //     text,
+    //   })
+    // );
 
-    // 3️⃣ Phát realtime cho backend
+
     socket.emit("message:send", {
       conversationId: currentConversation._id,
       sender: userId,

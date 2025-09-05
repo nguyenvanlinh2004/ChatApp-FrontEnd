@@ -12,7 +12,7 @@ export default function ChatList() {
   const { conversations, loading, error, currentConversation } = useAppSelector(
     (s) => s.conversations
   );
-  console.log("oaiuichsnisaugysvcbasc", conversations);
+
   useEffect(() => {
     dispatch(fetchMyConversations());
   }, [dispatch]);
@@ -21,16 +21,8 @@ export default function ChatList() {
     return <div className="p-3">Đang tải danh sách hội thoại...</div>;
   if (error) return <div className="p-3 text-red-500">{error}</div>;
 
-  function formatTime(isoString?: string) {
-    if (!isoString) return "";
-    const date = new Date(isoString);
-    return date.toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
   return (
-    <div className="p-3 w-64 border-r border-gray-200 flex flex-col">
+    <div className="p-3 w-full border-gray-200 flex flex-col">
       {/* Search box */}
       <input
         type="text"
@@ -46,10 +38,11 @@ export default function ChatList() {
               name={
                 c.isGroup
                   ? c.name
-                  : c.members.find((m) => m._id !== currentUserId)?.username
+                  : c.members.find((m) => m._id !== currentUserId)?.username ||
+                    "Người dùng"
               }
               lastMessage={c.lastMessage?.text || "Chưa có tin nhắn"}
-              time={formatTime(c.lastMessage?.createdAt)|| ""}
+              time={c.lastMessage?.createdAt || ""}
               active={currentConversation?._id === c._id}
             />
           </div>

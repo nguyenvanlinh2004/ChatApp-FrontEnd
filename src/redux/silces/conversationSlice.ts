@@ -91,6 +91,17 @@ const conversationSlice = createSlice({
     ) => {
       state.currentConversation = action.payload;
     },
+    updateConversationLastMessage: (state, action) => {
+      const { conversationId, lastMessage } = action.payload;
+      const conv = state.conversations.find((c) => c._id === conversationId);
+      if (conv) {
+        conv.lastMessage = lastMessage;
+        state.conversations = [
+          conv,
+          ...state.conversations.filter((c) => c._id !== conversationId),
+        ];
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -100,9 +111,11 @@ const conversationSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchMyConversations.fulfilled, (state, action) => {
-        console.log("payload conversations:", action.payload); 
+        console.log("payload conversations:", action.payload);
         state.loading = false;
-        state.conversations = Array.isArray(action.payload) ? action.payload : [];
+        state.conversations = Array.isArray(action.payload)
+          ? action.payload
+          : [];
       })
       .addCase(fetchMyConversations.rejected, (state, action) => {
         state.loading = false;
@@ -127,6 +140,9 @@ const conversationSlice = createSlice({
   },
 });
 
-export const { setCurrentConversation, setConversations } =
-  conversationSlice.actions;
+export const {
+  setCurrentConversation,
+  setConversations,
+  updateConversationLastMessage,
+} = conversationSlice.actions;
 export default conversationSlice.reducer;

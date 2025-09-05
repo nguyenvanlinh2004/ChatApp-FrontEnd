@@ -3,10 +3,10 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { useEffect, useRef } from "react";
 import { clearMessages, fetchMessages } from "../redux/silces/messageSlice";
 import socket from "../soket";
-import { useDispatch } from "react-redux";
+
 
 export default function MessageList() {
-  const dispatch=useAppDispatch();
+  const dispatch = useAppDispatch();
 
   const { items: messages, loading, error } = useAppSelector((s) => s.messages);
   const currentConversation = useAppSelector(
@@ -15,22 +15,21 @@ export default function MessageList() {
 
   const endRef = useRef<HTMLDivElement | null>(null);
 
-  // Cuộn xuống mỗi khi messages thay đổi
-// Khi chuyển conversation: clear + fetch mới + join room
   useEffect(() => {
-  if (!currentConversation?._id) return;
+    if (!currentConversation?._id) return;
 
-  dispatch(clearMessages());
+    dispatch(clearMessages());
 
-  // dùng dispatch bình thường, TS sẽ hiểu đây là thunk
-  dispatch(fetchMessages(currentConversation._id));
+    dispatch(fetchMessages(currentConversation._id));
 
-  socket.emit("joinConversation", currentConversation._id);
+    console.log("➡️ Join room:", currentConversation._id);
+    socket.emit("conversation:join", currentConversation._id);
 
-  return () => {
-    socket.emit("leaveConversation", currentConversation._id);
-  };
-}, [dispatch, currentConversation?._id]);
+    return () => {
+      console.log("⬅️ Leave room:", currentConversation._id);
+      socket.emit("conversation:leave", currentConversation._id);
+    };
+  }, [dispatch, currentConversation?._id]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -51,13 +50,20 @@ export default function MessageList() {
       {messages.filter(Boolean).map((m, i) => (
         <MessageItem
           key={m._id || i}
-          sender={m.sender ?? "Unknown"}
+          sender={
+            typeof m.sender === "object"
+              ? m.sender.username
+              : m.sender ?? "Unknown"
+          }
           text={m.text || ""}
           time={new Date(m.createdAt).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           })}
-          isOwn={m.sender === localStorage.getItem("userId")}
+          isOwn={
+            (typeof m.sender === "object" ? m.sender._id : m.sender) ===
+            localStorage.getItem("userId")
+          }
         />
       ))}
       {/* div dummy để scroll xuống cuối */}
