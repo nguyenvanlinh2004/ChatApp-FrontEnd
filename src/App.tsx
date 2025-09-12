@@ -10,7 +10,7 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Routes>
         {/* Auth routes */}
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* Chat layout (mọi route khác) */}
