@@ -11,8 +11,21 @@ import {
   ExpandMore,
 } from "@mui/icons-material";
 import { Delete, Link as LinkIcon } from "lucide-react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store";
 
 const ConversationInfo = () => {
+  const currentConversation = useSelector(
+    (state: RootState) => state.conversations.currentConversation
+  );
+  const authUser = useSelector((state: RootState) => state.auth.users);
+
+  const displayName = currentConversation
+    ? currentConversation.isGroup
+      ? currentConversation.name || "Nhóm không tên"
+      : currentConversation.members.find((m: any) => m._id !== authUser._id)
+          ?.username || "Người dùng"
+    : "Chưa chọn hội thoại";
   return (
     <div className="flex flex-col items-center w-full">
       <h1 className="font-semibold mb-1">Thông tin hội thoại</h1>
@@ -24,7 +37,7 @@ const ConversationInfo = () => {
           src="/static/images/avatar/1.jpg"
         />
         <Typography variant="h4" component="h1" sx={{ mt: 1 }} fontSize="large">
-          Văn Linh
+          {displayName}
         </Typography>
       </div>
 
