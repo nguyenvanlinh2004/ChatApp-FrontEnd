@@ -5,8 +5,7 @@ const conversationApi = {
     const res = await api.post<Conversation>("/conversations/one-to-one", {
       partnerId,
     });
-    console.log("hoi thoai", res.data);
-    return res.data;
+    return res as unknown as Conversation;
   },
 
   createGroup: async (name: string, memberIds: string[]) => {
@@ -33,7 +32,6 @@ const conversationApi = {
 
   myConversations: async (): Promise<Conversation[]> => {
     const res: Conversation[] = await api.get("/conversations/my");
-    console.log("dataconvenrtion", res);
     return res;
   },
 

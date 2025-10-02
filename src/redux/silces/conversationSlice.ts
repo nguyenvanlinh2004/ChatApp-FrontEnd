@@ -9,13 +9,13 @@ export interface User {
   fullName?: string;
 }
 export interface LastMessage {
-  _id: string;
+  _id?: string;
   text?: string;
   sender?: string;
   createdAt?: string;
 }
 export interface Conversation {
-  _id: string;
+  _id?: string;
   name?: string;
   isGroup: boolean;
   members: string[];
@@ -68,7 +68,9 @@ export const getOrCreateOneToOne = createAsyncThunk(
   "conversations/one-to-one",
   async (partnerId: string, { rejectWithValue }) => {
     try {
-      return await conversationApi.getOrCreateOneToOne(partnerId);
+      const conv = await conversationApi.getOrCreateOneToOne(partnerId);
+      console.log("Conversation fetched:", conv);
+      return conv;
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "Lỗi tạo hội thoại 1-1"
@@ -76,7 +78,6 @@ export const getOrCreateOneToOne = createAsyncThunk(
     }
   }
 );
-
 // Slice
 const conversationSlice = createSlice({
   name: "conversations",
@@ -102,10 +103,17 @@ const conversationSlice = createSlice({
         ];
       }
     },
+    addConversation: (state, action: PayloadAction<any>) => {
+      if (!action.payload?._id) return;
+      console.log("Adding conversation:", action.payload._id);
+      const exists = state.conversations.find(
+        (c) => c._id === action.payload._id
+      );
+      if (!exists) state.conversations.unshift(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
-      // fetchMyConversations
       .addCase(fetchMyConversations.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -129,6 +137,7 @@ const conversationSlice = createSlice({
 
       // getOrCreateOneToOne
       .addCase(getOrCreateOneToOne.fulfilled, (state, action) => {
+        if (!action.payload?._id) return;
         const exists = state.conversations.find(
           (c) => c._id === action.payload._id
         );
@@ -143,6 +152,7 @@ const conversationSlice = createSlice({
 export const {
   setCurrentConversation,
   setConversations,
+  addConversation,
   updateConversationLastMessage,
 } = conversationSlice.actions;
 export default conversationSlice.reducer;

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 
 const axiosClient = axios.create({
   baseURL: "http://localhost:5000/api", // URL backend của bạn
@@ -21,16 +21,14 @@ axiosClient.interceptors.request.use(
 
 // Xử lý response
 axiosClient.interceptors.response.use(
-  (response) => response.data, // tự động lấy response.data
+  (response: AxiosResponse) => response.data as any,
   (error) => {
     if (error.response?.status === 401) {
-      // Token hết hạn hoặc không hợp lệ
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
-      window.location.href = "/"; // redirect về login
+      window.location.href = "/";
     }
     return Promise.reject(error);
   }
 );
-
 export default axiosClient;
