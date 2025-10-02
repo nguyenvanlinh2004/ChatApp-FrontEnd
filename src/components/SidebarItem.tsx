@@ -1,8 +1,12 @@
+import { Tooltip } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
+
 type Props = {
   icon: React.ReactNode;
   badgeCount?: number;
   active?: boolean;
   onClick?: () => void;
+  label?: string;
 };
 
 export default function SidebarItem({
@@ -10,13 +14,16 @@ export default function SidebarItem({
   badgeCount,
   active,
   onClick,
+  label,
 }: Props) {
-  return (
+  const isMobile = useMediaQuery("(max-width: 840px)");
+
+  const content = (
     <div
       onClick={onClick}
-      className={`relative p-2 rounded-xl cursor-pointer hover:bg-gray-700 ${
-        active ? "bg-gray-700" : ""
-      }`}
+      className={`relative cursor-pointer flex items-center justify-center 
+        ${isMobile ? "flex-1 h-full rounded-none" : "p-2 rounded-xl mt-10"} 
+        ${active ? "bg-gray-700" : ""} hover:bg-gray-700`}
     >
       {icon}
       {badgeCount && (
@@ -25,5 +32,13 @@ export default function SidebarItem({
         </span>
       )}
     </div>
+  );
+
+  return isMobile ? (
+    content
+  ) : (
+    <Tooltip title={label || ""} placement="right">
+      {content}
+    </Tooltip>
   );
 }

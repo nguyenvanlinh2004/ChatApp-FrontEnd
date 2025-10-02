@@ -13,28 +13,42 @@ import {
 import { Delete, Link as LinkIcon } from "lucide-react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
+import { useAppSelector } from "../redux/hooks";
+import { FILE_URL } from "../api/URL";
 
 const ConversationInfo = () => {
   const currentConversation = useSelector(
     (state: RootState) => state.conversations.currentConversation
   );
-  const authUser = useSelector((state: RootState) => state.auth.users);
-
+  const { currentUser } = useAppSelector((s) => s.user);
+  const currentUserId = currentUser?._id;
+  const avatar = currentConversation
+    ? currentConversation.isGroup
+      ? currentConversation.name || "Nhóm không tên"
+      : (
+          currentConversation.members.find(
+            (m: any) => m._id !== currentUserId
+          ) as { avatar?: string }
+        )?.avatar || ""
+    : "";
   const displayName = currentConversation
     ? currentConversation.isGroup
       ? currentConversation.name || "Nhóm không tên"
-      : currentConversation.members.find((m: any) => m._id !== authUser._id)
-          ?.username || "Người dùng"
-    : "Chưa chọn hội thoại";
+      : (
+          currentConversation.members.find(
+            (m: any) => m._id !== currentUserId
+          ) as { username?: string }
+        )?.username || "Người dùng"
+    : "";
+
   return (
     <div className="flex flex-col items-center w-full">
       <h1 className="font-semibold mb-1">Thông tin hội thoại</h1>
-      {/* Avatar + Tên */}
       <div className="flex flex-col items-center mb-6">
         <Avatar
           sx={{ width: 56, height: 56, alignItems: "center" }}
-          alt="Remy Sharp"
-          src="/static/images/avatar/1.jpg"
+          alt={displayName}
+          src={FILE_URL + avatar}
         />
         <Typography variant="h4" component="h1" sx={{ mt: 1 }} fontSize="large">
           {displayName}
@@ -71,7 +85,6 @@ const ConversationInfo = () => {
         </div>
       </div>
 
-      {/* Ảnh/Video */}
       <div className="w-full mt-6 px-6 border-b pb-6">
         <div className="flex items-center justify-between">
           <span className="font-medium text-gray-800">Ảnh/Video</span>

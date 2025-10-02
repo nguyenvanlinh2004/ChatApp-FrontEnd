@@ -1,4 +1,4 @@
-// redux/messageSlice.ts
+
 import {
   createSlice,
   createAsyncThunk,
@@ -6,11 +6,10 @@ import {
 } from "@reduxjs/toolkit";
 import messageApi from "../../api/messageApi";
 
-// Kiểu dữ liệu message
 export interface Message {
   _id: string;
   conversationId: string;
-  sender: string; // userId
+  sender: string;
   text?: string;
   imageUrl?: string | null;
   createdAt: string;
@@ -18,12 +17,11 @@ export interface Message {
   seenBy: string[];
 }
 
-// Kiểu dữ liệu state
 interface MessageState {
   items: Message[];
   loading: boolean;
   error: string | null;
-  nextCursor?: string | null; // phân trang
+  nextCursor?: string | null; 
 }
 
 const initialState: MessageState = {
@@ -38,7 +36,6 @@ export const fetchMessages = createAsyncThunk(
   async (conversationId: string, { rejectWithValue }) => {
     try {
       const res = await messageApi.getMessages(conversationId);
-      // API trả về { items, nextCursor }
       return res;
     } catch (err: any) {
       return rejectWithValue(err.response?.data || err.message);
@@ -46,7 +43,6 @@ export const fetchMessages = createAsyncThunk(
   }
 );
 
-// Gửi message
 export const sendMessage = createAsyncThunk(
   "messages/sendMessage",
   async (
@@ -70,23 +66,17 @@ export const sendMessage = createAsyncThunk(
   }
 );
 
-// Đánh dấu message đã đọc
 export const markAsRead = createAsyncThunk(
   "messages/markAsRead",
   async (id: string, { rejectWithValue }) => {
     try {
       const res = await messageApi.markAsRead(id);
-      return res; // message sau khi update seenBy
+      return res;
     } catch (err: any) {
       return rejectWithValue(err.response?.data || err.message);
     }
   }
 );
-
-//
-// ------------------- SLICE -------------------
-//
-
 const messageSlice = createSlice({
   name: "messages",
   initialState,
@@ -95,11 +85,9 @@ const messageSlice = createSlice({
       state.items = [];
       state.nextCursor = null;
     },
-    // Thêm message mới từ socket realtime
     addMessageRealtime: (state, action: PayloadAction<Message>) => {
       state.items.push(action.payload);
     },
-    // Update message từ socket realtime (vd: seenBy)
     updateMessageRealtime: (state, action: PayloadAction<Message>) => {
       const idx = state.items.findIndex((m) => m._id === action.payload._id);
       if (idx !== -1) {

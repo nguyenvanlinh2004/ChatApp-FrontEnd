@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../redux/store";
 import { fetchMe } from "../../redux/silces/userSlice";
 import { useEffect } from "react";
+import {FILE_URL} from "../../api/URL"
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -21,7 +22,6 @@ export default function OpenProfilePopup({ open, onClose, onEdit }: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const { currentUser, loading } = useSelector((s: RootState) => s.user);
-  console.log("úe",currentUser)
 
   useEffect(() => {
     dispatch(fetchMe());
@@ -41,7 +41,7 @@ export default function OpenProfilePopup({ open, onClose, onEdit }: Props) {
       <DialogContent>
         <div className="flex flex-col items-center gap-3">
           <Avatar
-            src={currentUser?.avatar || ""}
+           src={currentUser?.avatar ?FILE_URL  + currentUser.avatar : ""}
             alt={currentUser?.username || "User"}
             sx={{ width: 80, height: 80 }}
           />

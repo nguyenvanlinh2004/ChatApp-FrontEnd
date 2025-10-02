@@ -56,7 +56,7 @@ export default function MessageList() {
             key={m._id || i}
             sender={
               typeof m.sender === "object"
-                ? m.sender.username
+                ? (m.sender as { username: string }).username
                 : m.sender ?? "Unknown"
             }
             text={m.text || ""}
@@ -65,8 +65,9 @@ export default function MessageList() {
               minute: "2-digit",
             })}
             isOwn={
-              (typeof m.sender === "object" ? m.sender._id : m.sender) ===
-              localStorage.getItem("userId")
+              (typeof m.sender === "object"
+                ? (m.sender as { _id: string })._id
+                : m.sender) === localStorage.getItem("userId")
             }
           />
         ))}

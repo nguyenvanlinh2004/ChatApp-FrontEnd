@@ -9,11 +9,8 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Auth routes */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        {/* Chat layout (mọi route khác) */}
         <Route path="/chat" element={<ChatLayout />} />
       </Routes>
     </BrowserRouter>
