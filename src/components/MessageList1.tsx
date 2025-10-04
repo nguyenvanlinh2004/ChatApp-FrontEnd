@@ -43,7 +43,7 @@ export default function MessageList() {
   if (error) return <div className="p-3 text-red-500">{error}</div>;
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="flex-1 overflow-y-auto scrollbar-hidden p-4 space-y-4 bg-gray-100 w-full h-full">
       {messages
         .filter(Boolean)
         .filter((m) =>
@@ -59,6 +59,7 @@ export default function MessageList() {
                 ? (m.sender as { username: string }).username
                 : m.sender ?? "Unknown"
             }
+            imageUrl={m.imageUrl||""}
             text={m.text || ""}
             time={new Date(m.createdAt).toLocaleTimeString([], {
               hour: "2-digit",

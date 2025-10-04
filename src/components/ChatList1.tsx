@@ -69,7 +69,7 @@ export default function ChatList({ onSelect }: { onSelect?: () => void }) {
       </div>
 
       {/* List */}
-      <div className="flex-1 overflow-y-auto space-y-2 px-2 pb-16 sm:pb-2">
+      <div className="flex-1 overflow-y-auto scrollbar-hidden space-y-2 px-2 pb-16 sm:pb-2">
         {filteredConversations.length > 0 ? (
           filteredConversations.map((c) => (
             <div

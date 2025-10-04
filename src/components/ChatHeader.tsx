@@ -32,7 +32,7 @@ export default function ChatHeader() {
     : "Chưa chọn hội thoại";
 
   return (
-    <div className="flex items-center justify-between p-4 border-b bg-white">
+    <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
       {/* Trái: tên hoặc ô tìm kiếm */}
       {searchMode ? (
         <input
@@ -84,7 +84,7 @@ export default function ChatHeader() {
             />
 
             {/* content */}
-            <div className="relative w-full h-full bg-white animate-slide-up">
+            <div className="relative w-full h-full bg-white animate-slide-up overflow-y-auto scrollbar-hidden">
               <div className="flex justify-between items-center p-4 border-b">
                 <h2 className="font-bold">Thông tin hội thoại</h2>
                 <X

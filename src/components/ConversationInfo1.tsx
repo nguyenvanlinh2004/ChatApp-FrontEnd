@@ -22,6 +22,7 @@ const ConversationInfo = () => {
   );
   const { currentUser } = useAppSelector((s) => s.user);
   const currentUserId = currentUser?._id;
+
   const avatar = currentConversation
     ? currentConversation.isGroup
       ? currentConversation.name || "Nhóm không tên"
@@ -31,6 +32,7 @@ const ConversationInfo = () => {
           ) as { avatar?: string }
         )?.avatar || ""
     : "";
+
   const displayName = currentConversation
     ? currentConversation.isGroup
       ? currentConversation.name || "Nhóm không tên"
@@ -43,48 +45,43 @@ const ConversationInfo = () => {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <h1 className="font-semibold mb-1">Thông tin hội thoại</h1>
+      {/* Header */}
+      <h1 className="font-semibold mb-2 text-lg text-gray-800">
+        Thông tin hội thoại
+      </h1>
       <div className="flex flex-col items-center mb-6">
         <Avatar
-          sx={{ width: 56, height: 56, alignItems: "center" }}
+          sx={{ width: 64, height: 64 }}
           alt={displayName}
           src={FILE_URL + avatar}
         />
-        <Typography variant="h4" component="h1" sx={{ mt: 1 }} fontSize="large">
+        <Typography variant="h6" component="h2" sx={{ mt: 1, fontWeight: 600 }}>
           {displayName}
         </Typography>
       </div>
 
       {/* 3 nút chức năng */}
-      <div className="grid grid-cols-3 justify-center gap-2 border-b pb-6 w-full">
-        <div className="flex flex-col items-center cursor-pointer ml-30">
-          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 shadow">
-            <NotificationsOff fontSize="small" />
+      <div className="grid grid-cols-3 gap-4 border-b pb-6 w-full">
+        {[
+          {
+            icon: <NotificationsOff fontSize="small" />,
+            label: "Tắt thông báo",
+          },
+          { icon: <PushPin fontSize="small" />, label: "Ghim hội thoại" },
+          { icon: <GroupAdd fontSize="small" />, label: "Tạo nhóm" },
+        ].map((item, idx) => (
+          <div key={idx} className="flex flex-col items-center">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 hover:bg-gray-200 transition transform hover:scale-105 shadow-sm">
+              {item.icon}
+            </div>
+            <span className="text-sm text-gray-700 mt-2 text-center">
+              {item.label}
+            </span>
           </div>
-          <span className="text-sm text-gray-700 mt-2 text-center w-20">
-            Tắt thông báo
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center cursor-pointer">
-          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 shadow">
-            <PushPin fontSize="small" />
-          </div>
-          <span className="text-sm text-gray-700 mt-2 text-center w-20">
-            Ghim hội thoại
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center cursor-pointer mr-30">
-          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 shadow">
-            <GroupAdd fontSize="small" />
-          </div>
-          <span className="text-sm text-gray-700 mt-2 text-center w-20">
-            Tạo nhóm trò chuyện
-          </span>
-        </div>
+        ))}
       </div>
 
+      {/* Ảnh/Video */}
       <div className="w-full mt-6 px-6 border-b pb-6">
         <div className="flex items-center justify-between">
           <span className="font-medium text-gray-800">Ảnh/Video</span>
@@ -92,17 +89,15 @@ const ConversationInfo = () => {
             Xem tất cả
           </span>
         </div>
-
         <div className="grid grid-cols-3 gap-2 mt-3">
-          <div className="w-full h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-            <PhotoLibrary className="text-gray-500" />
-          </div>
-          <div className="w-full h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-            <PhotoLibrary className="text-gray-500" />
-          </div>
-          <div className="w-full h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-            <PhotoLibrary className="text-gray-500" />
-          </div>
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="w-full h-20 bg-gray-200 rounded-lg flex items-center justify-center hover:bg-gray-300 transition"
+            >
+              <PhotoLibrary className="text-gray-500" />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -116,7 +111,7 @@ const ConversationInfo = () => {
         </div>
 
         <div className="mt-3 space-y-3">
-          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
             <InsertDriveFile className="text-gray-500" />
             <div className="flex flex-col">
               <span className="text-sm font-medium text-gray-800">
@@ -126,8 +121,8 @@ const ConversationInfo = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
-            <LinkIcon className="text-gray-500" />
+          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+            <LinkIcon className="text-gray-500" size={18} />
             <div className="flex flex-col">
               <span className="text-sm font-medium text-gray-800 truncate w-40">
                 https://example.com/bai-viet
@@ -163,16 +158,14 @@ const ConversationInfo = () => {
           </div>
         </div>
       </div>
-
-      {/* Báo xấu & Xoá lịch sử */}
       <div className="w-full mt-6 px-6 space-y-3">
-        <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
+        <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-lg transition">
           <Report className="text-gray-600" fontSize="small" />
           <span className="text-sm text-gray-700">Báo xấu</span>
         </div>
 
-        <div className="flex items-center gap-2 cursor-pointer hover:bg-red-50 p-2 rounded-lg">
-          <Delete className="text-red-500" fontSize="small" />
+        <div className="flex items-center gap-2 cursor-pointer hover:bg-red-50 p-2 rounded-lg transition">
+          <Delete className="text-red-500" size={16} />
           <span className="text-sm text-red-500">Xoá lịch sử trò chuyện</span>
         </div>
       </div>

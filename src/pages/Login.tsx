@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUsers, setUserId, setToken } from "../redux/silces/authSlice";
+import socket from "../soket";
 const Login: React.FC = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
@@ -27,6 +28,11 @@ const Login: React.FC = () => {
       dispatch(setToken(res.data.token));
       dispatch(setUserId(res.data.user._id));
       dispatch(setUsers(res.data.user));
+
+      socket.disconnect();
+      socket.auth = { token: res.data.token };
+      socket.connect();
+
     } catch (err: any) {
       alert(err.response?.data?.message || "Lỗi đăng nhập");
     }

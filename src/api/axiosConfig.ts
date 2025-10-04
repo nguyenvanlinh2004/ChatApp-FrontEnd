@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:5000/api", // URL backend của bạn
+  baseURL: "http://localhost:5000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -19,7 +19,6 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Xử lý response
 axiosClient.interceptors.response.use(
   (response: AxiosResponse) => response.data as any,
   (error) => {

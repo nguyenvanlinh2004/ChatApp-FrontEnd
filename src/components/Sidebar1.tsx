@@ -5,7 +5,7 @@ import { useState } from "react";
 import OpenProfilePopup from "./popup/OpenProfilePopup";
 import UpdateProfilePopup from "./popup/UpdateProfilePopup";
 import UserListPopup from "./popup/UserList";
-import LogoutDialog from "../dialog/LogOutDialog";
+import LogoutDialog from "../dialog/LogoutDialog";
 import { Avatar, useMediaQuery } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { FILE_URL } from "../api/URL";

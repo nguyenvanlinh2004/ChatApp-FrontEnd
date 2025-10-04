@@ -73,7 +73,7 @@ export default function ChatLayout() {
         {/* Chat List */}
         <div
           className={`
-            border-r overflow-y-auto transition-all duration-300
+            border-r border-gray-100 overflow-y-auto transition-all duration-300
             ${showChat ? "hidden sm:block sm:w-80" : "block w-full sm:w-80"}
           `}
         >
